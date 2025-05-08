@@ -38,13 +38,13 @@ client:
 
 
 dir_rule:
-  base_dir: D:\Bot\Dev\AstrBot\data\plugins\astrbot_plugins_JMPlugins
+  base_dir: D:\Bot\Dev\AstrBot\data\plugins\astrbot_plugins_JMPlugins\data
   rule: Bd_Pname
 download:
   cache: true
   image:
     decode: true
-    suffix: null
+    suffix: .jpg
   threading:
     image: 30
     photo: 16
