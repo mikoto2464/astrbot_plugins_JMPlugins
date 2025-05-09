@@ -23,9 +23,10 @@ global last_random_time, Current_random_time, flag02
 global last_search_picture_time, Current_search_picture_time, flag03
 global last_search_comic_time, Current_search_comic_time, flag04
 global ispicture
-last_Picture_time = 0
+
 CoolDownTime = 15
 ispicture = False
+
 option_url = "./data/plugins/astrbot_plugins_JMPlugins/option.yml"
 white_list_path = "./data/plugins/astrbot_plugins_JMPlugins/white_list.json"
 history_json_path = "./data/plugins/astrbot_plugins_JMPlugins/history.json"
