@@ -1,0 +1,17 @@
+{
+    "IsPicture": {
+        "description": "查询作品时候是否发送封面图",
+        "type": "int",
+        "hint": "不发送封面图：0，发送封面图：1",
+        "obvious_hint": true,
+        "default":0
+
+    },
+    "CD_Time":{
+        "description": "冷却时间",
+        "type": "int",
+        "hint": "冷却时间，单位为秒",
+        "obvious_hint": true,
+        "default":30
+    }
+}

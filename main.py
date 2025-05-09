@@ -11,6 +11,7 @@ from jmcomic import JmOption, JmAlbumDetail, JmHtmlClient, JmModuleConfig, JmApi
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register
 from astrbot.api import logger
+from astrbot.core import AstrBotConfig
 from astrbot.core.message.components import Plain, Reply, File, Nodes
 
 from astrbot.core.platform import MessageType
@@ -24,18 +25,12 @@ global last_search_picture_time, Current_search_picture_time, flag03
 global last_search_comic_time, Current_search_comic_time, flag04
 global ispicture
 
-CoolDownTime = 15
-ispicture = False
-
 option_url = "./data/plugins/astrbot_plugins_JMPlugins/option.yml"
 white_list_path = "./data/plugins/astrbot_plugins_JMPlugins/white_list.json"
 history_json_path = "./data/plugins/astrbot_plugins_JMPlugins/history.json"
 
-
-
 def check_is_6or7_digits(str):
     return bool(re.match(r'^\d{1,7}$', str))
-
 
 def get_number_from_str(str):
     num_list = re.findall(r'\d+', str)
@@ -45,13 +40,12 @@ def get_number_from_str(str):
 
     return result_number
 
-
 global option
 
 
 @register("JMPlugins", "orchidsziyou", "查询本子名字插件", "1.0.0")
 class MyPlugin(Star):
-    def __init__(self, context: Context):
+    def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
         global option, last_Picture_time, white_list_group, white_list_user, last_random_time, Current_random_time, flag02, last_search_picture_time, flag03, last_search_comic_time, Current_search_comic_time, flag04
         option = create_option_by_file(option_url)
@@ -59,6 +53,16 @@ class MyPlugin(Star):
         last_Picture_time = 0
         last_random_time = 0
         last_search_comic_time = 0
+
+        #加载设置
+        global ispicture,CoolDownTime
+        self.config = config
+        CoolDownTime = self.config["CD_Time"]
+        if self.config["IsPicture"]>=1:
+            ispicture = True
+        else:
+            ispicture = False
+
 
         with open(white_list_path, 'r') as file:
             data = json.load(file)
