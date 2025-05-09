@@ -6,8 +6,10 @@
 ## 依赖
 运行本插件需要安装以下包：  
 [jmcomic](https://github.com/hect0x7/JMComic-Crawler-Python)  
-[PicImageSearch](https://github.com/kitUIN/PicImageSearch)  
+[PicImageSearch](https://github.com/kitUIN/PicImageSearch)
 十分感谢以上作者提供的API。
+
+**此外，本插件依赖于Aiocqhttp，仅测试过NapCat可以正常使用，请窒息。**
 
 ## 功能
 1 .根据id查询作品  
@@ -62,6 +64,8 @@ CoolDownTime = 15  //cd时间
 ispicture = False //是否发送封面
 ```
 将CoolDownTime改成自己需要的cd时间，ispicture改成True即可。
+
+*注意:cd是全局共享的，我懒得分群写:)*
 
 5.为开用的私聊qq号或者群聊添加权限。
 指令： /JM promote/demote group/user groupid/userid  
