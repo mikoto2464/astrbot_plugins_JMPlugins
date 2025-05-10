@@ -5,7 +5,7 @@ import random
 from PicImageSearch import Ascii2D
 
 from jmcomic import JmOption, JmAlbumDetail, JmHtmlClient, JmModuleConfig, JmApiClient, create_option_by_file, \
-    JmSearchPage, JmPhotoDetail, JmImageDetail
+    JmSearchPage, JmPhotoDetail, JmImageDetail, JmCategoryPage, JmMagicConstants
 
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register
@@ -72,8 +72,6 @@ class MyPlugin(Star):
         print(datadir)
         white_list_path = os.path.join(datadir, "white_list.json")
         history_json_path = os.path.join(datadir, "history.json")
-
-
 
         if not os.path.exists(white_list_path):
             with open(white_list_path, 'w') as file:
@@ -463,6 +461,98 @@ class MyPlugin(Star):
             }
             response = await client.api.call_action('send_group_msg', **payloads2)  # 调用 协议端
 
+    @jm_command_group.command("rank")
+    async def jm_rank_command(self, event: AstrMessageEvent, time: str):
+        ''' 这是一个 排行榜 指令'''
+        if event.get_message_type() == MessageType.FRIEND_MESSAGE:
+            if event.get_sender_id() not in white_list_user:
+                yield event.plain_result("该指令仅限管理员使用")
+                return
+        if event.get_message_type() == MessageType.GROUP_MESSAGE:
+            if event.get_group_id() not in white_list_group:
+                yield event.plain_result("该群没有权限使用该指令")
+                return
+
+        if time not in ['m','w','a','d']:
+            yield event.plain_result("参数错误，请使用m/w/d/a")
+            return
+
+        try:
+            client = JmOption.copy_option(option).new_jm_client()
+            page=""
+            hint=""
+            if time =='m':
+                hint="本月热门本子："
+                page: JmCategoryPage = client.categories_filter(
+                    page=1,
+                    time=JmMagicConstants.TIME_MONTH,  # 时间选择全部，具体可以写什么请见JmMagicConstants
+                    category=JmMagicConstants.CATEGORY_ALL,  # 分类选择全部，具体可以写什么请见JmMagicConstants
+                    order_by=JmMagicConstants.ORDER_BY_VIEW,  # 按照观看数排序，具体可以写什么请见JmMagicConstants
+                )
+            elif time == 'w':
+                hint="本周热门本子："
+                page: JmCategoryPage = client.categories_filter(
+                    page=1,
+                    time=JmMagicConstants.TIME_WEEK,  # 时间选择全部，具体可以写什么请见JmMagicConstants
+                    category=JmMagicConstants.CATEGORY_ALL,  # 分类选择全部，具体可以写什么请见JmMagicConstants
+                    order_by=JmMagicConstants.ORDER_BY_VIEW,  # 按照观看数排序，具体可以写什么请见JmMagicConstants
+                )
+            elif time == 'd':
+                hint="今日热门本子："
+                page: JmCategoryPage = client.categories_filter(
+                    page=1,
+                    time=JmMagicConstants.TIME_TODAY,  # 时间选择全部，具体可以写什么请见JmMagicConstants
+                    category=JmMagicConstants.CATEGORY_ALL,  # 分类选择全部，具体可以写什么请见JmMagicConstants
+                    order_by=JmMagicConstants.ORDER_BY_VIEW,  # 按照观看数排序，具体可以写什么请见JmMagicConstants
+                )
+            elif time== 'a':
+                hint="全部热门本子："
+                page: JmCategoryPage = client.categories_filter(
+                    page=1,
+                    time=JmMagicConstants.TIME_ALL,  # 时间选择全部，具体可以写什么请见JmMagicConstants
+                    category=JmMagicConstants.CATEGORY_ALL,  # 分类选择全部，具体可以写什么请见JmMagicConstants
+                    order_by=JmMagicConstants.ORDER_BY_VIEW,  # 按照观看数排序，具体可以写什么请见JmMagicConstants
+                    )
+            result_str=""
+            for aid,title in page:
+                result_str += f"{aid}:{title}\n"
+
+            botid = event.get_self_id()
+            from astrbot.api.message_components import Node, Plain, Image
+            node = Node(
+                uin=botid,
+                name="仙人",
+                content=[
+                    Plain(f"{hint}：\n{result_str}")
+                ]
+            )
+            yield event.chain_result([node])
+        except:
+            yield event.plain_result("搜索失败")
+            return
+
+    @jm_command_group.command("help")
+    async def jm_help_command(self, event: AstrMessageEvent):
+        ''' 这是一个 帮助 指令'''
+        str=""
+        str+="本插件提供以下指令：\n"
+        str+="name [id]：获取本子名称(以及封面图)\n"
+        str+="rank [m/w/d/a]：获取本子排行榜\n"
+        str+="rand：随机获取本子\n"
+        str+="key [关键字]：根据关键字搜索本子\n"
+        str+="history：获取本子历史记录\n"
+        str+="对图片回复/search   ：搜索图片\n"
+
+        botid = event.get_self_id()
+        from astrbot.api.message_components import Node, Plain, Image
+        node = Node(
+            uin=botid,
+            name="仙人",
+            content=[
+                Plain(str)
+            ]
+        )
+        yield event.chain_result([node])
 
     @filter.command("search")
     async def jm_search_command(self, event: AstrMessageEvent):

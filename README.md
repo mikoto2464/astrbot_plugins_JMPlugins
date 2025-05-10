@@ -35,7 +35,11 @@
 
 *搜索的结果不是特别准确，请谨慎使用.*
 
-5.权限管理  
+5 .查询月/周/日排行榜  
+指令格式： /JM rank m/w/d/a
+输出：按照浏览次数排序的月/周/日/总排行榜。
+
+6.权限管理  
 指令格式： /JM promote/demote group/user groupid/userid    
 例如：/JM promote group 123456789 
 
