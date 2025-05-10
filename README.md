@@ -9,6 +9,8 @@
 [PicImageSearch](https://github.com/kitUIN/PicImageSearch)
 十分感谢以上作者提供的API。
 
+根据项目里面的requirements.txt安装依赖包。
+
 **此外，本插件依赖于Aiocqhttp，仅测试过NapCat可以正常使用，请窒息。**
 
 ## 功能
@@ -58,12 +60,7 @@ proxies: {
 3.安装[jmcomic](https://github.com/hect0x7/JMComic-Crawler-Python)和[PicImageSearch](https://github.com/kitUIN/PicImageSearch)两个包。
 
 4.设置是否发送封面以及cd时间。
-目前插件默认是关闭发送封面，以及cd为15秒。若需要更改，请打开main.py，找到以下两行：
-```
-CoolDownTime = 15  //cd时间
-ispicture = False //是否发送封面
-```
-将CoolDownTime改成自己需要的cd时间，ispicture改成True即可。
+目前插件默认是关闭发送封面，以及cd为15秒。若需要更改，在插件控制台里面修改即可。
 
 *注意:cd是全局共享的，我懒得分群写:)*
 
@@ -86,3 +83,10 @@ ispicture = False //是否发送封面
 **使用本插件可能导致qq被击毙，请谨慎使用或者查询是否有内鬼再使用。**  
 **使用本插件可能导致qq被击毙，请谨慎使用或者查询是否有内鬼再使用。**  
 **使用本插件可能导致qq被击毙，请谨慎使用或者查询是否有内鬼再使用。**  
+
+
+## 更新：
+2025/5/10
+添加了控制台修改配置的功能。  
+修复了无法正常发送历史记录json的问题。
+

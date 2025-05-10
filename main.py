@@ -2,15 +2,13 @@ import os
 import re
 from datetime import datetime
 import random
-from PicImageSearch import BaiDu, Iqdb, Ascii2D, EHentai, Network, Google
+from PicImageSearch import Ascii2D
 
-import jmcomic
 from jmcomic import JmOption, JmAlbumDetail, JmHtmlClient, JmModuleConfig, JmApiClient, create_option_by_file, \
     JmSearchPage, JmPhotoDetail, JmImageDetail
 
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register
-from astrbot.api import logger
 from astrbot.core import AstrBotConfig
 from astrbot.core.message.components import Plain, Reply, File, Nodes
 
@@ -18,6 +16,7 @@ from astrbot.core.platform import MessageType
 import json
 
 from astrbot.core.star.filter.permission import PermissionType
+from astrbot.api.star import StarTools
 
 global last_Picture_time, Current_Picture_time, CoolDownTime, flag01, white_list_group, white_list_user
 global last_random_time, Current_random_time, flag02
@@ -26,11 +25,13 @@ global last_search_comic_time, Current_search_comic_time, flag04
 global ispicture
 
 option_url = "./data/plugins/astrbot_plugins_JMPlugins/option.yml"
-white_list_path = "./data/plugins/astrbot_plugins_JMPlugins/white_list.json"
-history_json_path = "./data/plugins/astrbot_plugins_JMPlugins/history.json"
+
+global white_list_path, history_json_path, datadir
+
 
 def check_is_6or7_digits(str):
     return bool(re.match(r'^\d{1,7}$', str))
+
 
 def get_number_from_str(str):
     num_list = re.findall(r'\d+', str)
@@ -39,6 +40,7 @@ def get_number_from_str(str):
         result_number += num_list[i]
 
     return result_number
+
 
 global option
 
@@ -54,20 +56,31 @@ class MyPlugin(Star):
         last_random_time = 0
         last_search_comic_time = 0
 
-        #加载设置
-        global ispicture,CoolDownTime
+        # 加载设置
+        global ispicture, CoolDownTime
         self.config = config
         CoolDownTime = self.config["CD_Time"]
-        if self.config["IsPicture"]>=1:
+        if self.config["IsPicture"] >= 1:
             ispicture = True
         else:
             ispicture = False
+        print(ispicture, CoolDownTime)
 
+        # 加载白名单
+        global datadir, white_list_path, history_json_path
+        datadir = StarTools.get_data_dir("astrbot_plugins_JMPlugins")
+        print(datadir)
+        white_list_path = os.path.join(datadir, "white_list.json")
+        history_json_path = os.path.join(datadir, "history.json")
 
-        with open(white_list_path, 'r') as file:
-            data = json.load(file)
-            white_list_group = data["groupIDs"]
-            white_list_user = data["userIDs"]
+        if not os.path.exists(white_list_path):
+            with open(white_list_path, 'w') as file:
+                json.dump({"groupIDs": [], "userIDs": []}, file)
+        else:
+            with open(white_list_path, 'r') as file:
+                data = json.load(file)
+                white_list_group = data["groupIDs"]
+                white_list_user = data["userIDs"]
 
         if not os.path.exists(history_json_path):
             with open(history_json_path, 'w') as file:
@@ -153,7 +166,7 @@ class MyPlugin(Star):
             with open(history_json_path, "w") as json_file:
                 json.dump(data, json_file)
 
-        #判断是否发送图片还是只发送名字
+        # 判断是否发送图片还是只发送名字
         botid = event.get_self_id()
         from astrbot.api.message_components import Node, Plain, Image
 
@@ -218,7 +231,7 @@ class MyPlugin(Star):
                 yield event.chain_result([resNode])
 
         else:
-            #只发送名字
+            # 只发送名字
             node = Node(
                 uin=botid,
                 name="仙人",
@@ -231,7 +244,6 @@ class MyPlugin(Star):
                 ]
             )
             yield event.chain_result([node])
-
 
     @jm_command_group.command("rand")
     async def jm_rand_command(self, event: AstrMessageEvent):
@@ -415,14 +427,40 @@ class MyPlugin(Star):
                 return
 
         abs_history_json_path = os.path.abspath(history_json_path)
-        file_url = f'file://{abs_history_json_path}'
-        print(file_url)
+        file_url = f"file://{abs_history_json_path}"
+        from astrbot.core.platform.sources.aiocqhttp.aiocqhttp_message_event import AiocqhttpMessageEvent
+        assert isinstance(event, AiocqhttpMessageEvent)
+        if (event.get_message_type() == MessageType.FRIEND_MESSAGE):
+            user_id = event.get_sender_id()
+            client = event.bot
+            payloads2 = {
+                "user_id": user_id,
+                "message": [
+                    {
+                        "type": "file",
+                        "data": {
+                            "file": file_url,
+                        }
+                    }
+                ]
+            }
+            response = await client.api.call_action('send_private_msg', **payloads2)  # 调用 协议端  API
+        if event.get_message_type() == MessageType.GROUP_MESSAGE:
+            group_id = event.get_group_id()
+            client = event.bot
+            payloads2 = {
+                "group_id": group_id,
+                "message": [
+                    {
+                        "type": "file",
+                        "data": {
+                            "file": file_url,
+                        }
+                    }
+                ]
+            }
+            response = await client.api.call_action('send_group_msg', **payloads2)  # 调用 协议端
 
-        chain = [
-            File(file=file_url, name="历史记录.json")
-        ]
-
-        yield event.chain_result(chain)
 
     @filter.command("search")
     async def jm_search_command(self, event: AstrMessageEvent):
