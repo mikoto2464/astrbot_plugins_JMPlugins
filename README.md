@@ -45,6 +45,30 @@
 指令格式： /JM history  
 输出：包含所有查询过的神秘作品的id和名字，以json格式输出。  
 
+## 版本问题：
+若您的astrbot版本比较早，可能没有此函数：
+```
+datadir = StarTools.get_data_dir("astrbot_plugins_JMPlugins")
+```
+如果遇到这种情况，请根据以下方法进行修改：
+把这段代码
+```
+#导入包
+from astrbot.api.star import StarTools
+# 加载白名单
+global datadir, white_list_path, history_json_path
+datadir = StarTools.get_data_dir("astrbot_plugins_JMPlugins")
+print(datadir)        
+white_list_path = os.path.join(datadir, "white_list.json")
+history_json_path = os.path.join(datadir, "history.json")
+```
+当中的导入删除，以及下面的加载白名单代码修改为
+```
+global white_list_path, history_json_path
+white_list_path="./data/plugins/astrbot_plugins_JMPlugins/white_list.json"
+history_json_path="./data/plugins/astrbot_plugins_JMPlugins/history.json"
+```
+
 ## 使用
 1. 下载本插件，将本插件放入plugins文件夹下。
 

@@ -73,6 +73,8 @@ class MyPlugin(Star):
         white_list_path = os.path.join(datadir, "white_list.json")
         history_json_path = os.path.join(datadir, "history.json")
 
+
+
         if not os.path.exists(white_list_path):
             with open(white_list_path, 'w') as file:
                 json.dump({"groupIDs": [], "userIDs": []}, file)
