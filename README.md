@@ -45,7 +45,12 @@
 
 **注意：该指令仅限管理员使用，需要在Astrbot控制台给对应账号添加为管理员才能使用。**
 
-6.查看历史记录  
+
+7 .黑名单功能
+指令格式： /JM block add/remove albumid  
+例如:  /JM block add 350432
+
+8.查看历史记录  
 指令格式： /JM history  
 输出：包含所有查询过的神秘作品的id和名字，以json格式输出。  
 
@@ -60,17 +65,19 @@ datadir = StarTools.get_data_dir("astrbot_plugins_JMPlugins")
 #导入包
 from astrbot.api.star import StarTools
 # 加载白名单
-global datadir, white_list_path, history_json_path
+global datadir, white_list_path, history_json_path,blocklist_path,block_list
 datadir = StarTools.get_data_dir("astrbot_plugins_JMPlugins")
-print(datadir)        
+print(datadir)
 white_list_path = os.path.join(datadir, "white_list.json")
 history_json_path = os.path.join(datadir, "history.json")
+blocklist_path = os.path.join(datadir, "block_list.json")
 ```
 当中的导入删除，以及下面的加载白名单代码修改为
 ```
 global white_list_path, history_json_path
 white_list_path="./data/plugins/astrbot_plugins_JMPlugins/white_list.json"
 history_json_path="./data/plugins/astrbot_plugins_JMPlugins/history.json"
+blocklist_path="./data/plugins/astrbot_plugins_JMPlugins/block_list.json"
 ```
 
 ## 使用
@@ -117,4 +124,7 @@ proxies: {
 2025/5/10
 添加了控制台修改配置的功能。  
 修复了无法正常发送历史记录json的问题。
+
+2025/5/25
+添加了黑名单功能，防止有人查出董卓恶心大伙
 
