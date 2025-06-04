@@ -46,6 +46,7 @@ def get_number_from_str(str):
 global option
 
 
+
 @register("JMPlugins", "orchidsziyou", "查询本子名字插件", "1.0.0")
 class MyPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
