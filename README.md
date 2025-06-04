@@ -48,7 +48,7 @@
 
 7 .黑名单功能
 指令格式： /JM block add/remove albumid  
-例如:  /JM block add 350432
+例如:  /JM block add 350234
 
 8.查看历史记录  
 指令格式： /JM history  
