@@ -46,7 +46,6 @@ def get_number_from_str(str):
 global option
 
 
-
 @register("JMPlugins", "orchidsziyou", "查询本子名字插件", "1.0.0")
 class MyPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
@@ -196,6 +195,19 @@ class MyPlugin(Star):
                     os.remove('./data/plugins/astrbot_plugins_JMPlugins/result.jpg')
                 client.download_by_image_detail(image, './data/plugins/astrbot_plugins_JMPlugins/result.jpg')
 
+                # 给图片添加防gank
+                if os.path.exists('./data/plugins/astrbot_plugins_JMPlugins/result.jpg'):
+                    from PIL import Image as ProcessImage
+                    original_image = ProcessImage.open('./data/plugins/astrbot_plugins_JMPlugins/result.jpg')
+                    # 获取原始图片的宽度和高度
+                    width, height = original_image.size
+                    # 创建一张新的空白图片，大小为原图的宽度和五倍高度
+                    new_image = ProcessImage.new('RGB', (width, height * 5), color=(255, 255, 255))
+                    # 将原图粘贴到新图片的下半部分
+                    new_image.paste(original_image, (0, height * 4))
+                    # 保存最终结果
+                    new_image.save('./data/plugins/astrbot_plugins_JMPlugins/result.jpg')
+
                 node = Node(
                     uin=botid,
                     name="仙人",
@@ -249,16 +261,16 @@ class MyPlugin(Star):
                         Plain(f"tags：{album.tags}\n")
                     ]
                 )
-                picture_node = Node(
+                RIP_node = Node(
                     uin=botid,
                     name="仙人",
                     content=
                     [
-                        Plain("封面下载失败，请窒息")
+                        Plain("封面下载失败或者发送失败")
                     ]
                 )
                 resNode = Nodes(
-                    nodes=[node, tag_node,picture_node]
+                    nodes=[node, tag_node, RIP_node]
                 )
                 yield event.chain_result([resNode])
 
