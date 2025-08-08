@@ -25,8 +25,6 @@ global last_search_picture_time, Current_search_picture_time, flag03
 global last_search_comic_time, Current_search_comic_time, flag04
 global ispicture
 
-option_url = "/opt/AstrBot/data/plugins/astrbot_plugins_jmplugins/option.yml"
-
 global white_list_path, history_json_path, datadir, blocklist_path
 
 
@@ -51,7 +49,7 @@ class MyPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
         global option, last_Picture_time, white_list_group, white_list_user, last_random_time, Current_random_time, flag02, last_search_picture_time, flag03, last_search_comic_time, Current_search_comic_time, flag04
-        option = create_option_by_file(option_url)
+        option = create_option_by_file("/opt/AstrBot/data/plugins/astrbot_plugins_jmplugins/option.yml")
         last_search_picture_time = 0
         last_Picture_time = 0
         last_random_time = 0
