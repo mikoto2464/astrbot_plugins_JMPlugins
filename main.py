@@ -191,14 +191,14 @@ class MyPlugin(Star):
                 photo: JmPhotoDetail = album.getindex(0)
                 photo01 = client.get_photo_detail(photo.photo_id, False)
                 image: JmImageDetail = photo01[0]
-                if os.path.exists('./data/plugins/astrbot_plugins_JMPlugins/result.jpg'):
-                    os.remove('./data/plugins/astrbot_plugins_JMPlugins/result.jpg')
-                client.download_by_image_detail(image, './data/plugins/astrbot_plugins_JMPlugins/result.jpg')
+                if os.path.exists('./data/plugins/astrbot_plugins_jmplugins/result.jpg'):
+                    os.remove('./data/plugins/astrbot_plugins_jmplugins/result.jpg')
+                client.download_by_image_detail(image, './data/plugins/astrbot_plugins_jmplugins/result.jpg')
 
                 # 给图片添加防gank
-                if os.path.exists('./data/plugins/astrbot_plugins_JMPlugins/result.jpg'):
+                if os.path.exists('./data/plugins/astrbot_plugins_jmplugins/result.jpg'):
                     from PIL import Image as ProcessImage
-                    original_image = ProcessImage.open('./data/plugins/astrbot_plugins_JMPlugins/result.jpg')
+                    original_image = ProcessImage.open('./data/plugins/astrbot_plugins_jmplugins/result.jpg')
                     # 获取原始图片的宽度和高度
                     width, height = original_image.size
                     # 创建一张新的空白图片，大小为原图的宽度和五倍高度
@@ -206,7 +206,7 @@ class MyPlugin(Star):
                     # 将原图粘贴到新图片的下半部分
                     new_image.paste(original_image, (0, height * 4))
                     # 保存最终结果
-                    new_image.save('./data/plugins/astrbot_plugins_JMPlugins/result.jpg')
+                    new_image.save('./data/plugins/astrbot_plugins_jmplugins/result.jpg')
 
                 node = Node(
                     uin=botid,
@@ -232,7 +232,7 @@ class MyPlugin(Star):
                     name="仙人",
                     content=
                     [
-                        Image.fromFileSystem("./data/plugins/astrbot_plugins_JMPlugins/result.jpg")
+                        Image.fromFileSystem("./data/plugins/astrbot_plugins_jmplugins/result.jpg")
                     ]
                 )
                 resNode = Nodes(
