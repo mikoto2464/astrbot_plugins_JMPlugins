@@ -25,7 +25,7 @@ global last_search_picture_time, Current_search_picture_time, flag03
 global last_search_comic_time, Current_search_comic_time, flag04
 global ispicture
 
-option_url = "./data/plugins/astrbot_plugins_jmplugins/option.yml"
+option_url = "/opt/AstrBot/data/plugins/astrbot_plugins_jmplugins/option.yml"
 
 global white_list_path, history_json_path, datadir, blocklist_path
 
