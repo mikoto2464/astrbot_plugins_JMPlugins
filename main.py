@@ -25,7 +25,7 @@ global last_search_picture_time, Current_search_picture_time, flag03
 global last_search_comic_time, Current_search_comic_time, flag04
 global ispicture
 
-option_url = "./data/plugins/astrbot_plugins_JMPlugins/option.yml"
+option_url = "./data/plugins/astrbot_plugins_jmplugins/option.yml"
 
 global white_list_path, history_json_path, datadir, blocklist_path
 
@@ -69,7 +69,7 @@ class MyPlugin(Star):
 
         # 加载白名单
         global datadir, white_list_path, history_json_path, blocklist_path, block_list
-        datadir = StarTools.get_data_dir("astrbot_plugins_JMPlugins")
+        datadir = StarTools.get_data_dir("astrbot_plugins_jmplugins")
         print(datadir)
         white_list_path = os.path.join(datadir, "white_list.json")
         history_json_path = os.path.join(datadir, "history.json")
